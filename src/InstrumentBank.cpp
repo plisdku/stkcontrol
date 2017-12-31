@@ -44,7 +44,7 @@ float InstrumentBank::tick()
         itr != inactiveFreqs.end(); itr++)
     {
         double freq = *itr;
-        std::cerr << "IB push inactive " << freq << ".\n";
+        // std::cerr << "IB push inactive " << freq << ".\n";
         inactive_.push_back(active_[freq]);
         active_.erase(freq);
     }
@@ -56,7 +56,7 @@ float InstrumentBank::tick()
 
 void InstrumentBank::noteOn(float freq, float amplitude)
 {
-    std::cerr << "IB On " << freq << ", " << amplitude << "\n";
+    // std::cerr << "IB On " << freq << ", " << amplitude << "\n";
 
     if (active_.count(freq))
     {
@@ -87,7 +87,7 @@ void InstrumentBank::noteOn(float freq, float amplitude)
 
 void InstrumentBank::noteOff(float freq, float amplitude)
 {
-    std::cerr << "IB off " << freq << ", " << amplitude << "\n";
+    // std::cerr << "IB off " << freq << ", " << amplitude << "\n";
     std::map<double, Instrument*>::iterator itr = active_.find(freq);
 
     if (itr != active_.end())

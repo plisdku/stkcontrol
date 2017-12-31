@@ -10,6 +10,14 @@ class InstrumentBank
 {
 public:
     InstrumentBank();
+
+    // Factory methods because can't templatize a constructor.
+    template<class Instr>
+    static InstrumentBank* create(int numInstruments);
+
+    template<class Instr>
+    static InstrumentBank* create(int numInstruments, float argument);
+
     virtual ~InstrumentBank(); // don't need it I think
 
     template<class Instr>
@@ -55,6 +63,22 @@ private:
     std::vector<Instrument*> inactive_;
 };
 
+
+template<class Instr>
+InstrumentBank* InstrumentBank::create(int numInstruments)
+{
+    InstrumentBank* ib = new InstrumentBank();
+    ib->init<Instr>(numInstruments);
+    return ib;
+}
+
+template<class Instr>
+InstrumentBank* InstrumentBank::create(int numInstruments, float argument)
+{
+    InstrumentBank* ib = new InstrumentBank();
+    ib->init<Instr>(numInstruments, argument);
+    return ib;
+}
 
 template<class Instr>
 void InstrumentBank::init(int numInstruments)

@@ -99,17 +99,19 @@ void initialize()
     Stk::setRawwavePath("/Users/paul/Documents/Projects/Music/STK/stk/rawwaves/");
 
     // We have ten fingers... so we can play ten clarinets.  Right?
-    InstrumentBank* clarinets = new InstrumentBank;
-    clarinets->init<Clarinet>(10);
-    InstrumentBank* mandolins = new InstrumentBank;
-    mandolins->init<Mandolin>(10, 196.0);
-    InstrumentBank* plucked = new InstrumentBank;
-    plucked->init<Plucked>(10);
+    // InstrumentBank* clarinets = new InstrumentBank;
+    // clarinets->init<Clarinet>(20);
+
+    // InstrumentBank* mandolins = new InstrumentBank;
+    // mandolins->init<Mandolin>(20, 196.0);
+
+    // InstrumentBank* plucked = new InstrumentBank;
+    // plucked->init<Plucked>(20);
 
     gInstruments = std::vector<InstrumentBank*>();
-    gInstruments.push_back(clarinets);
-    gInstruments.push_back(mandolins);
-    gInstruments.push_back(plucked);
+    gInstruments.push_back(InstrumentBank::create<Clarinet>(20));
+    gInstruments.push_back(InstrumentBank::create<Mandolin>(20, 196.0));
+    gInstruments.push_back(InstrumentBank::create<Plucked>(20));
 
 
 
