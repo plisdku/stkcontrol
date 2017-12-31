@@ -26,7 +26,11 @@ class stk_command(object):
 
 _commands = []
 
-def note(in_id, in_time, duration, freq, onset_ampl=0.5, offset_ampl = 0.5):
+def note(in_id, in_time, duration, midi=None, freq=None, onset_ampl=0.5, offset_ampl = 0.5):
+
+    if midi is not None:
+        freq = 440.0 * (2.0 ** ((midi-69)/12.0))
+
     _commands.append(stk_command("on", in_id, int(in_time), freq, onset_ampl))
     _commands.append(stk_command("off", in_id, int(in_time+duration), freq, offset_ampl))
 
