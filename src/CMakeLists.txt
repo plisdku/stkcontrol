@@ -17,6 +17,7 @@ include_directories(
 
 add_library( stkcontrol SHARED
 	stkcontrol.cpp
+    InstrumentBank.cpp
 )
 target_link_libraries(stkcontrol stk )
 

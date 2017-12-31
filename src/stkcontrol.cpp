@@ -1,8 +1,10 @@
 #include <iostream>
 #include <cstdint>
 #include <cstdlib>
+#include <stdexcept>
 
 #include "stkcontrol.h"
+#include "InstrumentBank.h"
 
 #include "stk/RtAudio.h"
 
@@ -66,15 +68,19 @@ struct Cmd
         return Cmd(instrumentId, kOn, time, freq, amplitude);
     }
 
-    static Cmd off(int instrumentId, int time, float amplitude)
+    // static Cmd off(int instrumentId, int time, float amplitude)
+    // {
+    //     return Cmd(instrumentId, kOff, time, amplitude, 0.0);
+    // }
+    static Cmd off(int instrumentId, int time, float freq, float amplitude)
     {
-        return Cmd(instrumentId, kOff, time, amplitude, 0.0);
+        return Cmd(instrumentId, kOff, time, freq, amplitude);
     }
 
-    static Cmd frequency(int instrumentId, int time, float freq)
-    {
-        return Cmd(instrumentId, kFreq, time, freq, 0.0);
-    }
+    // static Cmd frequency(int instrumentId, int time, float freq)
+    // {
+    //     return Cmd(instrumentId, kFreq, time, freq, 0.0);
+    // }
 
     static Cmd stop(int time)
     {
@@ -82,7 +88,8 @@ struct Cmd
     }
 };
 
-std::vector<Instrmnt*> gInstruments;
+// std::vector<Instrmnt*> gInstruments;
+std::vector<InstrumentBank*> gInstruments;
 std::vector<Cmd> gCommands;
 
 void initialize()
@@ -91,104 +98,129 @@ void initialize()
     Stk::setSampleRate(44100.0);
     Stk::setRawwavePath("/Users/paul/Documents/Projects/Music/STK/stk/rawwaves/");
 
-    gInstruments = std::vector<Instrmnt*>();
-    gInstruments.push_back(new Clarinet());             // 0
-    gInstruments.push_back(new BlowHole(440.0));
-    gInstruments.push_back(new Saxofony(220.0));
-    gInstruments.push_back(new Flute(220.0));
-    gInstruments.push_back(new Brass());
-    gInstruments.push_back(new BlowBotl());
-    gInstruments.push_back(new Bowed());
-    gInstruments.push_back(new Plucked());
-    gInstruments.push_back(new StifKarp());
-    gInstruments.push_back(new Sitar());
-    gInstruments.push_back(new Mandolin(220.0));        // 10
-    gInstruments.push_back(new Rhodey());
-    gInstruments.push_back(new Wurley());
-    gInstruments.push_back(new TubeBell());
-    gInstruments.push_back(new HevyMetl());
-    gInstruments.push_back(new PercFlut());
-    gInstruments.push_back(new BeeThree());
-    gInstruments.push_back(new FMVoices());
-    gInstruments.push_back(new VoicForm());
-    gInstruments.push_back(new Moog());
-    gInstruments.push_back(new Simple());               // 20
-    gInstruments.push_back(new Drummer());
-    gInstruments.push_back(new BandedWG());
-    gInstruments.push_back(new Shakers());
-    gInstruments.push_back(new ModalBar());
-    gInstruments.push_back(new Mesh2D(2, 2));
-    gInstruments.push_back(new Resonate());
-    gInstruments.push_back(new Whistle());
+    // We have ten fingers... so we can play ten clarinets.  Right?
+    InstrumentBank* clarinets = new InstrumentBank;
+    clarinets->init<Clarinet>(10);
+    InstrumentBank* mandolins = new InstrumentBank;
+    mandolins->init<Mandolin>(10, 196.0);
+    InstrumentBank* plucked = new InstrumentBank;
+    plucked->init<Plucked>(10);
 
-    // For reasons I have not yet determined, some of the instruments are on
-    // after initialization.  Using noteOff() seems to have no effect on them.
+    gInstruments = std::vector<InstrumentBank*>();
+    gInstruments.push_back(clarinets);
+    gInstruments.push_back(mandolins);
+    gInstruments.push_back(plucked);
 
-    gInstruments[10]->noteOn(440.0, 0.00000001); // turn off the mandolin (lol?)
-    gInstruments[27]->noteOn(440.0, 0.00000001); // turn off the whistle
-    gInstruments[18]->noteOn(440.0, 0.00000001); // turn off the VoicForm
+
+
+    // gInstruments = std::vector<Instrmnt*>();
+    // gInstruments.push_back(new Clarinet());             // 0
+    // gInstruments.push_back(new BlowHole(440.0));
+    // gInstruments.push_back(new Saxofony(220.0));
+    // gInstruments.push_back(new Flute(220.0));
+    // gInstruments.push_back(new Brass());
+    // gInstruments.push_back(new BlowBotl());
+    // gInstruments.push_back(new Bowed());
+    // gInstruments.push_back(new Plucked());
+    // gInstruments.push_back(new StifKarp());
+    // gInstruments.push_back(new Sitar());
+    // gInstruments.push_back(new Mandolin(220.0));        // 10
+    // gInstruments.push_back(new Rhodey());
+    // gInstruments.push_back(new Wurley());
+    // gInstruments.push_back(new TubeBell());
+    // gInstruments.push_back(new HevyMetl());
+    // gInstruments.push_back(new PercFlut());
+    // gInstruments.push_back(new BeeThree());
+    // gInstruments.push_back(new FMVoices());
+    // gInstruments.push_back(new VoicForm());
+    // gInstruments.push_back(new Moog());
+    // gInstruments.push_back(new Simple());               // 20
+    // gInstruments.push_back(new Drummer());
+    // gInstruments.push_back(new BandedWG());
+    // gInstruments.push_back(new Shakers());
+    // gInstruments.push_back(new ModalBar());
+    // gInstruments.push_back(new Mesh2D(2, 2));
+    // gInstruments.push_back(new Resonate());
+    // gInstruments.push_back(new Whistle());
+
+    // // For reasons I have not yet determined, some of the instruments are on
+    // // after initialization.  Using noteOff() seems to have no effect on them.
+
+    // gInstruments[10]->noteOn(440.0, 0.00000001); // turn off the mandolin (lol?)
+    // gInstruments[27]->noteOn(440.0, 0.00000001); // turn off the whistle
+    // gInstruments[18]->noteOn(440.0, 0.00000001); // turn off the VoicForm
     
     gCommands = std::vector<Cmd>();
 }
 
 
-struct TickData
+void shutdown()
 {
-    int counter_;
-    int cmdCounter_;
-    std::vector<Cmd> *cmds_;
-    std::vector<Instrmnt*> *instruments_;
-
-    TickData() : counter_(0), cmdCounter_(0), cmds_(0L), instruments_(0L)
+    gCommands.clear();
+    for (int ii = 0; ii < gInstruments.size(); ii++)
     {
+        delete gInstruments[ii];
     }
-};
-
-// Called automatically when the system needs a new buffer of audio samples
-int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-    double streamTime, RtAudioStreamStatus status, void *dataPointer)
-{
-    TickData *data = (TickData*) dataPointer;
-    StkFloat *samples = (StkFloat*) outputBuffer;
-
-    for (int ii = 0; ii < nBufferFrames; ii++)
-    {
-        // Handle command queue
-        while (data->cmdCounter_ < data->cmds_->size() && data->counter_ >= data->cmds_->at(data->cmdCounter_).time_)
-        {
-            const Cmd & cmd = data->cmds_->at(data->cmdCounter_);
-            Instrmnt* instrument = data->instruments_->at(cmd.instr_);
-            switch (cmd.type_)
-            {
-                case kOn:
-                    instrument->noteOn(cmd.arg0_, cmd.arg1_);
-                    break;
-                case kOff:
-                    instrument->noteOff(cmd.arg0_);
-                    break;
-                case kFreq:
-                    instrument->setFrequency(cmd.arg0_);
-                    break;
-                default:
-                    break;
-            }
-            data->cmdCounter_++;
-        }
-
-
-        StkFloat sum = 0.0;
-        for (int ii = 0; ii < gInstruments.size(); ii++)
-        {
-            sum += gInstruments[ii]->tick();
-        }
-
-        *samples++ = sum;
-
-        data->counter_++;
-    }
-
-    return 0;
+    gInstruments.clear();
 }
+
+// struct TickData
+// {
+//     int counter_;
+//     int cmdCounter_;
+//     std::vector<Cmd> *cmds_;
+//     std::vector<Instrmnt*> *instruments_;
+
+//     TickData() : counter_(0), cmdCounter_(0), cmds_(0L), instruments_(0L)
+//     {
+//     }
+// };
+
+// // Called automatically when the system needs a new buffer of audio samples
+// int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
+//     double streamTime, RtAudioStreamStatus status, void *dataPointer)
+// {
+//     TickData *data = (TickData*) dataPointer;
+//     StkFloat *samples = (StkFloat*) outputBuffer;
+
+//     for (int ii = 0; ii < nBufferFrames; ii++)
+//     {
+//         // Handle command queue
+//         while (data->cmdCounter_ < data->cmds_->size() && data->counter_ >= data->cmds_->at(data->cmdCounter_).time_)
+//         {
+//             const Cmd & cmd = data->cmds_->at(data->cmdCounter_);
+//             Instrmnt* instrument = data->instruments_->at(cmd.instr_);
+//             switch (cmd.type_)
+//             {
+//                 case kOn:
+//                     instrument->noteOn(cmd.arg0_, cmd.arg1_);
+//                     break;
+//                 case kOff:
+//                     instrument->noteOff(cmd.arg0_);
+//                     break;
+//                 case kFreq:
+//                     instrument->setFrequency(cmd.arg0_);
+//                     break;
+//                 default:
+//                     break;
+//             }
+//             data->cmdCounter_++;
+//         }
+
+
+//         StkFloat sum = 0.0;
+//         for (int ii = 0; ii < gInstruments.size(); ii++)
+//         {
+//             sum += gInstruments[ii]->tick();
+//         }
+
+//         *samples++ = sum;
+
+//         data->counter_++;
+//     }
+
+//     return 0;
+// }
 
 
 
@@ -197,15 +229,15 @@ void pushOn(int instrumentId, int time, float freq, float amplitude)
     gCommands.push_back(Cmd::on(instrumentId, time, freq, amplitude));
 }
 
-void pushOff(int instrumentId, int time, float amplitude)
+void pushOff(int instrumentId, int time, float freq, float amplitude)
 {
-    gCommands.push_back(Cmd::off(instrumentId, time, amplitude));
+    gCommands.push_back(Cmd::off(instrumentId, time, freq, amplitude));
 }
 
-void pushFreq(int instrumentId, int time, float freq)
-{
-    gCommands.push_back(Cmd::frequency(instrumentId, time, freq));
-}
+// void pushFreq(int instrumentId, int time, float freq)
+// {
+//     gCommands.push_back(Cmd::frequency(instrumentId, time, freq));
+// }
 
 void pushStop(int time)
 {
@@ -227,19 +259,31 @@ void writeWav(const char* fileName)
         while (iCmd < gCommands.size() && ii >= gCommands[iCmd].time_)
         {
             const Cmd & cmd = gCommands[iCmd];
-            Instrmnt* instrument = gInstruments.at(cmd.instr_);
+            // Instrmnt* instrument = gInstruments.at(cmd.instr_);
+
+            if (cmd.instr_ < 0 || cmd.instr_ >= gInstruments.size())
+            {
+                throw std::runtime_error("Instrument index out of range");
+            }
+
+            InstrumentBank* instrument = gInstruments.at(cmd.instr_);
+
             switch (cmd.type_)
             {
                 case kOn:
+                    // std::cerr << "Command on.\n";
                     instrument->noteOn(cmd.arg0_, cmd.arg1_);
                     break;
                 case kOff:
-                    instrument->noteOff(cmd.arg0_);
+                    // std::cerr << "Command off.\n";
+                    instrument->noteOff(cmd.arg0_, cmd.arg1_);
+                    // instrument->noteOff(cmd.arg0_);
                     break;
                 case kFreq:
-                    instrument->setFrequency(cmd.arg0_);
+                    // instrument->setFrequency(cmd.arg0_);
                     break;
                 case kStop:
+                    std::cerr << "Command stop.\n";
                     isDone = true;
                     break;
                 default:
