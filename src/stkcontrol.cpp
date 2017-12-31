@@ -99,22 +99,13 @@ void initialize()
     Stk::setRawwavePath("/Users/paul/Documents/Projects/Music/STK/stk/rawwaves/");
 
     // We have ten fingers... so we can play ten clarinets.  Right?
-    // InstrumentBank* clarinets = new InstrumentBank;
-    // clarinets->init<Clarinet>(20);
-
-    // InstrumentBank* mandolins = new InstrumentBank;
-    // mandolins->init<Mandolin>(20, 196.0);
-
-    // InstrumentBank* plucked = new InstrumentBank;
-    // plucked->init<Plucked>(20);
+    // How about twenty?
 
     gInstruments = std::vector<InstrumentBank*>();
     gInstruments.push_back(InstrumentBank::create<Clarinet>(20));
     gInstruments.push_back(InstrumentBank::create<Mandolin>(20, 196.0));
     gInstruments.push_back(InstrumentBank::create<Plucked>(20));
-
-
-
+    
     // gInstruments = std::vector<Instrmnt*>();
     // gInstruments.push_back(new Clarinet());             // 0
     // gInstruments.push_back(new BlowHole(440.0));
@@ -285,7 +276,7 @@ void writeWav(const char* fileName)
                     // instrument->setFrequency(cmd.arg0_);
                     break;
                 case kStop:
-                    std::cerr << "Command stop.\n";
+                    // std::cerr << "Command stop.\n";
                     isDone = true;
                     break;
                 default:
