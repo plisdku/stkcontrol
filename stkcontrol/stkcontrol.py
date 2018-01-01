@@ -49,13 +49,15 @@ def stop(in_time_s):
     _commands.append(stk_command("stop", 0, in_time_s, 440.0, 1.0))
 
 def write_wav(fileName, sampleRateHz):
+    global _commands
+
     sorted_commands = sorted(_commands, key=lambda x: x.time)
+
+    if sorted_commands[-1].type != "stop":
+        sorted_commands.append(stk_command("stop", 0, sorted_commands[-1].time + 4.0, 440.0, 1.0))
 
     # for ss in sorted_commands:
     #     print ss.time, ss.type, "in_id", ss.in_id, "freq", ss.freq, "ampl", ss.ampl
-
-    if sorted_commands[-1].type != "stop":
-        sorted_commands.append(stk_command("stop", 0, sorted_commands[-1].time + 4*sampleRateHz, 440.0, 1.0))
 
     _initialize(sampleRateHz)
 
