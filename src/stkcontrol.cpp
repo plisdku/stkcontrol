@@ -91,21 +91,23 @@ struct Cmd
 // std::vector<Instrmnt*> gInstruments;
 std::vector<InstrumentBank*> gInstruments;
 std::vector<Cmd> gCommands;
+double gSampleRateHz;
 
-void initialize()
+void initialize(double sampleRateHz)
 {
     Stk::showWarnings(true);
-    Stk::setSampleRate(44100.0);
+    Stk::setSampleRate(sampleRateHz);
     Stk::setRawwavePath("/Users/paul/Documents/Projects/Music/STK/stk/rawwaves/");
 
     // We have ten fingers... so we can play ten clarinets.  Right?
     // How about twenty?
 
+    gSampleRateHz = sampleRateHz;
     gInstruments = std::vector<InstrumentBank*>();
     gInstruments.push_back(InstrumentBank::create<Clarinet>(20));
     gInstruments.push_back(InstrumentBank::create<Mandolin>(20, 196.0));
     gInstruments.push_back(InstrumentBank::create<Plucked>(20));
-    
+
     // gInstruments = std::vector<Instrmnt*>();
     // gInstruments.push_back(new Clarinet());             // 0
     // gInstruments.push_back(new BlowHole(440.0));
@@ -244,7 +246,7 @@ void writeWav(const char* fileName)
 
     int iCmd = 0;
 
-    int maxSamples = 44100 * 3600;
+    int maxSamples = gSampleRateHz * 3600;
     bool isDone = false;
     for (int ii = 0; ii < maxSamples && !isDone; ii++)
     {

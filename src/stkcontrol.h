@@ -1,7 +1,7 @@
 #ifndef _STKTOY_
 #define _STKTOY_
 
-extern "C" void initialize();
+extern "C" void initialize(double sampleRateHz); // try 44100
 
 extern "C" void pushOn(int instrumentId, int time, float freq, float amplitude);
 extern "C" void pushOff(int instrumentId, int time, float freq, float amplitude);

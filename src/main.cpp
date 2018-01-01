@@ -8,7 +8,7 @@ int main()
 {
     std::cout << "Hello, world!\n";
 
-    initialize();
+    initialize(44100);
 
     // for (int nn = 0; nn < 100; nn++)
     // {
