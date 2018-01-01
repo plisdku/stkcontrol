@@ -7,7 +7,7 @@ setup(name="stkcontrol",
     author="Paul Hansen",
     author_email="paul.c.hansen@gmail.com",
     license="MIT",
-    packages="stkcontrol",
+    packages=["stkcontrol"],
     install_requires=[
         "numpy"
     ],
