@@ -49,7 +49,7 @@ def note(in_id, in_time_s, duration_s, midi=None, freq=None, onset_ampl=0.5, off
 def stop(in_time_s):
     _commands.append(stk_command("stop", 0, in_time_s, 440.0, 1.0))
 
-def writeWav(fileName, sampleRateHz):
+def write_wav(fileName, sampleRateHz):
     sorted_commands = sorted(_commands, key=lambda x: x.time)
 
     # for ss in sorted_commands:
