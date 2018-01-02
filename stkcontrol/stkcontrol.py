@@ -77,3 +77,7 @@ def write_wav(fileName, sampleRateHz):
     _shutdown()
 
     _commands = []
+
+
+instrument_names = ["clarinet", "mandolin", "plucked", "flute"]
+
